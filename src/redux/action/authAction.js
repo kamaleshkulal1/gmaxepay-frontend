@@ -1,9 +1,12 @@
 import { LOGIN_SUCCESS, LOGOUT, RESTORE_AUTH } from '../actionType/authActionType';
 
-export const loginSuccess = (user) => {
+export const loginSuccess = (user, permissions = null) => {
   return {
     type: LOGIN_SUCCESS,
-    payload: user,
+    payload: {
+      ...user,
+      permissions: permissions || user?.permissions || null,
+    },
   };
 };
 export const logout = () => ({

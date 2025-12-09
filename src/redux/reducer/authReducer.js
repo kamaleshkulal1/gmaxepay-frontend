@@ -5,6 +5,7 @@ const initialState = {
   user: null,
   token: null,
   isAuthenticated: false,
+  permissions: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -12,8 +13,9 @@ const authReducer = (state = initialState, action) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        user: action.payload,
+        user: action.payload?.user || action.payload,
         token: action.payload?.token || action.payload?.accessToken || null,
+        permissions: action.payload?.permissions || null,
         isAuthenticated: true,
       };
     case LOGOUT:
@@ -21,6 +23,7 @@ const authReducer = (state = initialState, action) => {
         ...state,
         user: null,
         token: null,
+        permissions: null,
         isAuthenticated: false,
       };
     case RESTORE_AUTH:
@@ -32,6 +35,11 @@ const authReducer = (state = initialState, action) => {
         if (userToken && userData) {
           try {
             const parsedUserData = typeof userData === 'string' ? JSON.parse(userData) : userData;
+            // Get permissions from storage
+            const storedPermissions = secureLocalStorage.getItem('permissions');
+            const parsedPermissions = storedPermissions 
+              ? (typeof storedPermissions === 'string' ? JSON.parse(storedPermissions) : storedPermissions)
+              : null;
             // Store in same format as LOGIN_SUCCESS: { token, user }
             const authPayload = {
               token: userToken,
@@ -41,6 +49,7 @@ const authReducer = (state = initialState, action) => {
               ...state,
               user: authPayload,
               token: userToken,
+              permissions: parsedPermissions,
               isAuthenticated: !!userToken,
             };
           } catch (parseError) {
@@ -68,6 +77,7 @@ const authReducer = (state = initialState, action) => {
         localStorage.removeItem('auth');
         secureLocalStorage.removeItem('userData');
         secureLocalStorage.removeItem('userToken');
+        secureLocalStorage.removeItem('permissions');
         return state;
       }
     default:

@@ -397,12 +397,23 @@ const LoginDesign1 = () => {
             6: "/employeeDashboard/home",
           };
           
-          // Dispatch loginSuccess with user data
+          // Get permissions from storage
+          const storedPermissions = secureLocalStorage.getItem("permissions");
+          const parsedPermissions = storedPermissions
+            ? (typeof storedPermissions === "string"
+                ? JSON.parse(storedPermissions)
+                : storedPermissions)
+            : null;
+
+          // Dispatch loginSuccess with user data and permissions
           dispatch(
-            loginSuccess({
-              token: factresponse || existingToken,
-              user: parsedUserData || userDataFromResponse,
-            })
+            loginSuccess(
+              {
+                token: factresponse || existingToken,
+                user: parsedUserData || userDataFromResponse,
+              },
+              parsedPermissions
+            )
           );
           
           // Navigate based on role
@@ -419,11 +430,22 @@ const LoginDesign1 = () => {
         try {
           const parsedUserData = JSON.parse(storedUserData);
           const userRole = parsedUserData?.userRole || userDataFromResponse?.userRole;
+          // Get permissions from storage
+          const storedPermissions2 = secureLocalStorage.getItem("permissions");
+          const parsedPermissions2 = storedPermissions2
+            ? (typeof storedPermissions2 === "string"
+                ? JSON.parse(storedPermissions2)
+                : storedPermissions2)
+            : null;
+
           dispatch(
-            loginSuccess({
-              token: factresponse || jwtToken,
-              user: parsedUserData || userDataFromResponse,
-            })
+            loginSuccess(
+              {
+                token: factresponse || jwtToken,
+                user: parsedUserData || userDataFromResponse,
+              },
+              parsedPermissions2
+            )
           );
           const rolePaths = {
             1: "/superDashboard/home",

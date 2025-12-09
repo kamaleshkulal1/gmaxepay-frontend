@@ -8,6 +8,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import secureLocalStorage from "react-secure-storage";
 const MasterDt = "/img/MasterDt.png";
 const Distributor = "/img/Distributor.png";
 const Ratailer = "/img/Retailer.png";
@@ -72,7 +73,8 @@ const SuperAdmin = () => {
       bg: "bg-[#FFF7EB]", // Light orange
     },
   ];
-
+const permissions = secureLocalStorage.getItem('permissions');
+console.log("permissions", permissions);
   return (
     <div className="p-4 sm:p-6  min-h-screen text-[#1B1717] space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

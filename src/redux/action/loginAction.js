@@ -96,6 +96,12 @@ export const refreshAccessToken = (companyId) => async (dispatch) => {
         secureLocalStorage.setItem("userData", JSON.stringify(userData));
       }
 
+      // Update permissions if provided
+      const permissions = data?.data?.permissions || data?.permissions;
+      if (permissions) {
+        secureLocalStorage.setItem("permissions", JSON.stringify(permissions));
+      }
+
       return accessToken || token;
     } else {
       // Refresh token is invalid or expired
@@ -327,6 +333,7 @@ export const authOtp = (payload, companyId) => async (dispatch) => {
       const refreshToken = data?.data?.refreshToken || data?.refreshToken;
       const token = data?.data?.token || data?.token;
       const userData = data?.data?.user || data?.user;
+      const permissions = data?.data?.permissions || data?.permissions;
       
       if (accessToken) {
         // Store JWT token - this is the final authentication token (expires in 5 minutes)
@@ -338,6 +345,10 @@ export const authOtp = (payload, companyId) => async (dispatch) => {
         // Store userData as JSON string if it exists
         if (userData) {
           secureLocalStorage.setItem("userData", JSON.stringify(userData));
+        }
+        // Store permissions as JSON string if it exists
+        if (permissions) {
+          secureLocalStorage.setItem("permissions", JSON.stringify(permissions));
         }
         // Remove login token as it's no longer needed
         secureLocalStorage.removeItem("loginToken");
@@ -351,6 +362,10 @@ export const authOtp = (payload, companyId) => async (dispatch) => {
         // Store userData as JSON string if it exists
         if (userData) {
           secureLocalStorage.setItem("userData", JSON.stringify(userData));
+        }
+        // Store permissions as JSON string if it exists
+        if (permissions) {
+          secureLocalStorage.setItem("permissions", JSON.stringify(permissions));
         }
         // Remove login token as it's no longer needed
         secureLocalStorage.removeItem("loginToken");

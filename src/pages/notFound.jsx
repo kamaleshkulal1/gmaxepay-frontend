@@ -1,9 +1,50 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useCompany } from '../context/CompanyContext';
 
 const NotFound = () => {
   const { company, loading } = useCompany();
+  const location = useLocation();
+  const user = useSelector((state) => state?.auth?.user);
+  const userRole = user?.user?.userRole;
+
+  // Determine the correct home path based on current route and user role
+  const getHomePath = () => {
+    // If we're in a dashboard route, determine based on the path
+    if (location.pathname.includes('/superDashboard')) {
+      return '/superDashboard/home';
+    } else if (location.pathname.includes('/adminDashboard')) {
+      return '/adminDashboard/home';
+    } else if (location.pathname.includes('/masterDistributerDashboard')) {
+      return '/masterDistributerDashboard/home';
+    } else if (location.pathname.includes('/distributerDashboard')) {
+      return '/distributerDashboard/home';
+    } else if (location.pathname.includes('/retailerDashboard')) {
+      return '/retailerDashboard/home';
+    } else if (location.pathname.includes('/employeeDashboard')) {
+      return '/employeeDashboard/home';
+    }
+    
+    // Fallback to user role based path
+    if (userRole) {
+      const rolePaths = {
+        1: '/superDashboard/home',
+        2: '/adminDashboard/home',
+        3: '/masterDistributerDashboard/home',
+        4: '/distributerDashboard/home',
+        5: '/retailerDashboard/home',
+        6: '/employeeDashboard/home',
+      };
+      return rolePaths[userRole] || '/superDashboard/home';
+    }
+    
+    // Default fallback
+    return '/superDashboard/home';
+  };
+
+  const homePath = getHomePath();
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center">
@@ -16,7 +57,7 @@ const NotFound = () => {
         <p className="text-gray-600 mt-4">The page you're looking for doesn't exist.</p>
         {!loading && (
           <Link
-            to="/"
+            to={homePath}
             className="inline-flex items-center gap-2 mt-6 px-6 py-3 text-white rounded-lg transition-colors"
             style={{
               backgroundColor: company?.primaryColor || '#039155'
