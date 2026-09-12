@@ -38,6 +38,7 @@ const MasterDistLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   // State for profile dropdown
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const profileDropdownRef = useRef(null);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const notificationDropdownRef = useRef(null);
 

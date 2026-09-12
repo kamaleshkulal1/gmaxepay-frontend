@@ -148,7 +148,7 @@ const userProfileReducer = (state = initialState, action) => {
     case ADD_BANK_ADMIN_SUCCESS:
       return {
         ...state,
-        loading: fasle,
+        loading: false,
         success: action?.payload?.status,
         message: action?.payload?.message,
         error: null,
