@@ -56,6 +56,7 @@ function OnboardingById() {
     // Step 7
     fatherName: "",
     motherName: "",
+    maritalStatus: "MARRIED",
     profilePhotoDataUrl: "",
     // Completed
     completed: false,

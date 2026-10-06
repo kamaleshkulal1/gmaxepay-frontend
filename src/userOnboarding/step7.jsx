@@ -155,6 +155,14 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
       return;
     }
 
+    if (!formData.maritalStatus) {
+      showNotification({
+        type: "error",
+        message: "Please select marital status",
+      });
+      return;
+    }
+
     if (!formData.profilePhotoDataUrl) {
       showNotification({
         type: "error",
@@ -179,6 +187,7 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
         postProfile(formData.profilePhotoDataUrl, companyData, token, {
           fatherName: formData.fatherName?.trim(),
           motherName: formData.motherName?.trim(),
+          maritalStatus: formData.maritalStatus || "MARRIED",
         }),
       );
     } catch (error) {
@@ -366,6 +375,38 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
                 />
               </div>
             </div>
+
+            <div>
+              <label
+                htmlFor="maritalStatus"
+                className="block text-xs md:text-sm font-[Gilroy-Semibold] text-[#1B1717] mb-1.5"
+              >
+                Marital Status
+              </label>
+              <div className="relative">
+                <img
+                  src="/img/User.png"
+                  alt="Marital Status"
+                  className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-70 z-10 pointer-events-none"
+                />
+                <div className="absolute left-9 md:left-11 top-1/2 -translate-y-1/2 h-4 md:h-5 w-px bg-gray-300 pointer-events-none" />
+                <select
+                  id="maritalStatus"
+                  name="maritalStatus"
+                  value={formData?.maritalStatus || "MARRIED"}
+                  onChange={handleInputChange}
+                  className="w-full h-10 md:h-11 border-[0.5px] font-[Gilroy-Medium] border-[#1B1717]/80 rounded-lg pl-10 md:pl-12 pr-10 text-sm md:text-base outline-none focus:border-[#039155] transition appearance-none bg-white cursor-pointer"
+                >
+                  <option value="MARRIED">Married</option>
+                  <option value="UNMARRIED">Unmarried</option>
+                </select>
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* CAMERA FRAME */}
@@ -467,7 +508,8 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
               isSubmitting ||
               !formData.profilePhotoDataUrl ||
               !formData?.fatherName?.trim() ||
-              !formData?.motherName?.trim()
+              !formData?.motherName?.trim() ||
+              !formData?.maritalStatus
             }
             className={`w-full
             h-10 md:h-11 lg:h-14
@@ -483,7 +525,8 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
               isSubmitting ||
               !formData.profilePhotoDataUrl ||
               !formData?.fatherName?.trim() ||
-              !formData?.motherName?.trim()
+              !formData?.motherName?.trim() ||
+              !formData?.maritalStatus
                 ? "bg-gray-400 cursor-not-allowed"
                 : "hover:bg-green-700"
             }

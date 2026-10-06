@@ -98,6 +98,7 @@ function OnboardingRetailerById({ referralCode: propReferralCode }) {
     ifscCode: "",
     fatherName: "",
     motherName: "",
+    maritalStatus: "MARRIED",
     profilePhotoDataUrl: "",
     completed: false,
     referralCode: getInitialReferralCode(),

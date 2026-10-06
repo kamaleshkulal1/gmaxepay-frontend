@@ -867,6 +867,7 @@ export const postProfile = (photoDataUrl, companyData, token, extraData = {}) =>
         if (typeof extraData === "object" && extraData !== null) {
             if (extraData.fatherName) formData.append("fatherName", extraData.fatherName);
             if (extraData.motherName) formData.append("motherName", extraData.motherName);
+            if (extraData.maritalStatus) formData.append("maritalStatus", extraData.maritalStatus);
         }
 
         const headers = {
