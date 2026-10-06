@@ -597,7 +597,7 @@ function OnboardingRetailerById({ referralCode: propReferralCode }) {
                     const done = isStepDone(step);
                     const accessible = isStepAccessible(idx);
 
-                    const isActive = startedStep === idx + 1;
+                    const isActive = startedStep === idx + 1 || (accessible && !done);
 
                     let status = "pending";
                     if (done) status = "completed";
@@ -614,7 +614,7 @@ function OnboardingRetailerById({ referralCode: propReferralCode }) {
                           }
                         }}
                         className={`relative rounded-2xl p-4 shadow transition-all
-                            ${status === "pending"
+                            ${!accessible && !done
                             ? "bg-gray-100 opacity-50 cursor-not-allowed"
                             : "bg-white cursor-pointer hover:shadow-md"
                           }
