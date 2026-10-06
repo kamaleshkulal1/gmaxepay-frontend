@@ -107,7 +107,24 @@ function Step7({ formData, setFormData, onComplete, onRefreshSteps }) {
     setFormData((d) => ({ ...d, profilePhotoDataUrl: dataUrl }));
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (setFormData) {
+      setFormData((d) => ({ ...d, [name]: value }));
+    }
+  };
+
   const handleSubmit = async () => {
+    if (!formData.fatherName || !formData.fatherName.trim()) {
+      notifyError("Please enter father name");
+      return;
+    }
+
+    if (!formData.motherName || !formData.motherName.trim()) {
+      notifyError("Please enter mother name");
+      return;
+    }
+
     if (!formData.profilePhotoDataUrl) {
       notifyError("Please capture a profile photo");
       return;
@@ -120,7 +137,12 @@ function Step7({ formData, setFormData, onComplete, onRefreshSteps }) {
     }
 
     // Upload the photo if not already uploaded
-    const res = await dispatch(postProfile(formData.profilePhotoDataUrl, token));
+    const res = await dispatch(
+      postProfile(formData.profilePhotoDataUrl, token, {
+        fatherName: formData.fatherName?.trim(),
+        motherName: formData.motherName?.trim(),
+      })
+    );
 
     if (res?.status === "SUCCESS") {
       notifySuccess(res?.message || "Profile posted successfully");
@@ -202,12 +224,67 @@ function Step7({ formData, setFormData, onComplete, onRefreshSteps }) {
         <h3 className="text-base sm:text-lg  font-[Gilroy-Semibold] text-[#1B1717] mb-2">
           Profile
         </h3>
-        <p className="text-xs sm:text-sm   font-[Gilroy-Medium] text-[#1B1717]/80 mb-6">
+        <p className="text-xs sm:text-sm   font-[Gilroy-Medium] text-[#1B1717]/80 mb-4">
           Profile Picture To Complete Your KYC
         </p>
 
-        {/* Dotted Border Card - Fixed dimensions: 534px x 276px */}
-        <div className=" h-[276px] mx-auto mb-4">
+        {/* Father & Mother Name Inputs */}
+        <div className="space-y-2 sm:space-y-3 mb-4 text-left">
+          <div>
+            <label
+              htmlFor="fatherName"
+              className="block text-xs sm:text-sm font-[Gilroy-Semibold] text-[#1B1717] mb-1.5"
+            >
+              Father Name
+            </label>
+            <div className="relative">
+              <img
+                src="/img/User.png"
+                alt="Father"
+                className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-70 z-10"
+              />
+              <div className="absolute left-9 md:left-11 top-1/2 -translate-y-1/2 h-4 md:h-5 w-px bg-gray-300" />
+              <input
+                type="text"
+                id="fatherName"
+                name="fatherName"
+                value={formData?.fatherName || ""}
+                onChange={handleInputChange}
+                placeholder="Enter Father Name"
+                className="w-full h-10 md:h-11 border-[0.5px] font-[Gilroy-Medium] border-[#1B1717]/80 rounded-lg pl-10 md:pl-12 pr-3 text-sm md:text-base outline-none focus:border-[#039155] transition"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="motherName"
+              className="block text-xs sm:text-sm font-[Gilroy-Semibold] text-[#1B1717] mb-1.5"
+            >
+              Mother Name
+            </label>
+            <div className="relative">
+              <img
+                src="/img/User.png"
+                alt="Mother"
+                className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-70 z-10"
+              />
+              <div className="absolute left-9 md:left-11 top-1/2 -translate-y-1/2 h-4 md:h-5 w-px bg-gray-300" />
+              <input
+                type="text"
+                id="motherName"
+                name="motherName"
+                value={formData?.motherName || ""}
+                onChange={handleInputChange}
+                placeholder="Enter Mother Name"
+                className="w-full h-10 md:h-11 border-[0.5px] font-[Gilroy-Medium] border-[#1B1717]/80 rounded-lg pl-10 md:pl-12 pr-3 text-sm md:text-base outline-none focus:border-[#039155] transition"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Dotted Border Card */}
+        <div className="h-[220px] sm:h-[240px] mx-auto mb-4">
           <div className="border-2 border-dashed border-[#1B1717] border-opacity-30 rounded-lg h-full relative overflow-hidden bg-[#FAFAFA]">
             {/* Always render video element but hide/show it based on state */}
             <video
@@ -314,7 +391,12 @@ function Step7({ formData, setFormData, onComplete, onRefreshSteps }) {
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={postProfileLoading || !formData.profilePhotoDataUrl}
+            disabled={
+              postProfileLoading ||
+              !formData.profilePhotoDataUrl ||
+              !formData?.fatherName?.trim() ||
+              !formData?.motherName?.trim()
+            }
             className={`w-full mt-2
             h-10 md:h-11 lg:h-14
             bg-[#039155]
@@ -325,10 +407,15 @@ function Step7({ formData, setFormData, onComplete, onRefreshSteps }) {
             transition
             shadow-lg
             flex items-center justify-center
-            ${postProfileLoading || !formData.profilePhotoDataUrl
-                ? "bg-[#039155] text-white cursor-not-allowed"
-                : "bg-[#039155] hover:bg-green-700"
-              }`}
+            ${
+              postProfileLoading ||
+              !formData.profilePhotoDataUrl ||
+              !formData?.fatherName?.trim() ||
+              !formData?.motherName?.trim()
+                ? "bg-gray-400 cursor-not-allowed"
+                : "hover:bg-green-700"
+            }
+          `}
           >
             {postProfileLoading ? "Submitting..." : "Submit"}
           </button>

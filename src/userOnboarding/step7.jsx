@@ -131,7 +131,30 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
     setFormData((d) => ({ ...d, profilePhotoDataUrl: dataUrl }));
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (setFormData) {
+      setFormData((d) => ({ ...d, [name]: value }));
+    }
+  };
+
   const handleSubmit = async () => {
+    if (!formData.fatherName || !formData.fatherName.trim()) {
+      showNotification({
+        type: "error",
+        message: "Please enter father name",
+      });
+      return;
+    }
+
+    if (!formData.motherName || !formData.motherName.trim()) {
+      showNotification({
+        type: "error",
+        message: "Please enter mother name",
+      });
+      return;
+    }
+
     if (!formData.profilePhotoDataUrl) {
       showNotification({
         type: "error",
@@ -153,7 +176,10 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
     try {
       // eslint-disable-next-line @typescript-eslint/await-thenable
       await dispatch(
-        postProfile(formData.profilePhotoDataUrl, companyData, token),
+        postProfile(formData.profilePhotoDataUrl, companyData, token, {
+          fatherName: formData.fatherName?.trim(),
+          motherName: formData.motherName?.trim(),
+        }),
       );
     } catch (error) {
       console.error("Error submitting profile:", error);
@@ -287,8 +313,63 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
             </p>
           </div>
 
-          {/* CAMERA FRAME (unchanged) */}
-          <div className="w-full h-[200px] sm:h-[220px] md:h-[250px] lg:h-[280px] xl:h-[250px] mx-auto">
+          {/* Father & Mother Name Inputs */}
+          <div className="space-y-2 sm:space-y-2.5 text-left">
+            <div>
+              <label
+                htmlFor="fatherName"
+                className="block text-xs md:text-sm font-[Gilroy-Semibold] text-[#1B1717] mb-1.5"
+              >
+                Father Name
+              </label>
+              <div className="relative">
+                <img
+                  src="/img/User.png"
+                  alt="Father"
+                  className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-70 z-10"
+                />
+                <div className="absolute left-9 md:left-11 top-1/2 -translate-y-1/2 h-4 md:h-5 w-px bg-gray-300" />
+                <input
+                  type="text"
+                  id="fatherName"
+                  name="fatherName"
+                  value={formData?.fatherName || ""}
+                  onChange={handleInputChange}
+                  placeholder="Enter Father Name"
+                  className="w-full h-10 md:h-11 border-[0.5px] font-[Gilroy-Medium] border-[#1B1717]/80 rounded-lg pl-10 md:pl-12 pr-3 text-sm md:text-base outline-none focus:border-[#039155] transition"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="motherName"
+                className="block text-xs md:text-sm font-[Gilroy-Semibold] text-[#1B1717] mb-1.5"
+              >
+                Mother Name
+              </label>
+              <div className="relative">
+                <img
+                  src="/img/User.png"
+                  alt="Mother"
+                  className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-70 z-10"
+                />
+                <div className="absolute left-9 md:left-11 top-1/2 -translate-y-1/2 h-4 md:h-5 w-px bg-gray-300" />
+                <input
+                  type="text"
+                  id="motherName"
+                  name="motherName"
+                  value={formData?.motherName || ""}
+                  onChange={handleInputChange}
+                  placeholder="Enter Mother Name"
+                  className="w-full h-10 md:h-11 border-[0.5px] font-[Gilroy-Medium] border-[#1B1717]/80 rounded-lg pl-10 md:pl-12 pr-3 text-sm md:text-base outline-none focus:border-[#039155] transition"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* CAMERA FRAME */}
+          <div className="w-full h-[180px] sm:h-[190px] md:h-[210px] lg:h-[230px] xl:h-[220px] mx-auto">
             <div className="border-2 border-dashed border-gray-300 rounded-lg sm:rounded-xl h-full relative overflow-hidden bg-gray-50">
               <video
                 ref={videoRef}
@@ -360,7 +441,7 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
             </div>
           </div>
 
-          {/* GUIDELINES (unchanged) */}
+          {/* GUIDELINES */}
           <div className="bg-green-50 border border-green-200 rounded-lg sm:rounded-xl p-3">
             <ul className="space-y-2">
               <li className="flex gap-2 text-xs sm:text-sm text-[#1B1717]">
@@ -382,7 +463,12 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={isSubmitting || !formData.profilePhotoDataUrl}
+            disabled={
+              isSubmitting ||
+              !formData.profilePhotoDataUrl ||
+              !formData?.fatherName?.trim() ||
+              !formData?.motherName?.trim()
+            }
             className={`w-full
             h-10 md:h-11 lg:h-14
             bg-[#039155]
@@ -394,7 +480,10 @@ function Step7({ formData, setFormData, onComplete, onBack, onShowSteps }) {
             shadow-lg
             flex items-center justify-center
             ${
-              isSubmitting || !formData.profilePhotoDataUrl
+              isSubmitting ||
+              !formData.profilePhotoDataUrl ||
+              !formData?.fatherName?.trim() ||
+              !formData?.motherName?.trim()
                 ? "bg-gray-400 cursor-not-allowed"
                 : "hover:bg-green-700"
             }

@@ -621,7 +621,7 @@ const dataURLtoFile = (dataUrl, filename) => {
 };
 
 // Async function for posting profile photo (combined liveness + shop)
-export const postProfile = (photoDataUrl, token) => async (dispatch) => {
+export const postProfile = (photoDataUrl, token, extraData = {}) => async (dispatch) => {
   dispatch({ type: LOADING_START });
   try {
     if (!photoDataUrl) {
@@ -638,6 +638,11 @@ export const postProfile = (photoDataUrl, token) => async (dispatch) => {
     const photoFile = dataURLtoFile(photoDataUrl, "profile-liveness.jpg");
     const formData = new FormData();
     formData.append("photo", photoFile);
+
+    if (typeof extraData === "object" && extraData !== null) {
+      if (extraData.fatherName) formData.append("fatherName", extraData.fatherName);
+      if (extraData.motherName) formData.append("motherName", extraData.motherName);
+    }
 
     const response = await axios.post(
       `${API_ROUTE}/api/v1/company/onboarding/${token}/postProfile`,

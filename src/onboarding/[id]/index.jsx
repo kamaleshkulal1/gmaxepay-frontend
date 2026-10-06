@@ -54,6 +54,8 @@ function OnboardingById() {
     bankAccountNumber: "",
     ifscCode: "",
     // Step 7
+    fatherName: "",
+    motherName: "",
     profilePhotoDataUrl: "",
     // Completed
     completed: false,

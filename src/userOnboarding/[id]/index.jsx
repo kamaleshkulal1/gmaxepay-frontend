@@ -96,6 +96,8 @@ function OnboardingRetailerById({ referralCode: propReferralCode }) {
     shopPhotoDataUrl: "",
     bankAccountNumber: "",
     ifscCode: "",
+    fatherName: "",
+    motherName: "",
     profilePhotoDataUrl: "",
     completed: false,
     referralCode: getInitialReferralCode(),

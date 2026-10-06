@@ -837,7 +837,7 @@ export const postBankDetails = (values, companyData, token) => async (dispatch) 
 };
 
 // Post Profile Action
-export const postProfile = (photoDataUrl, companyData, token) => async (dispatch) => {
+export const postProfile = (photoDataUrl, companyData, token, extraData = {}) => async (dispatch) => {
     try {
         if (!photoDataUrl) {
             dispatch({
@@ -863,6 +863,11 @@ export const postProfile = (photoDataUrl, companyData, token) => async (dispatch
 
         const formData = new FormData();
         formData.append("photo", photoFile);
+
+        if (typeof extraData === "object" && extraData !== null) {
+            if (extraData.fatherName) formData.append("fatherName", extraData.fatherName);
+            if (extraData.motherName) formData.append("motherName", extraData.motherName);
+        }
 
         const headers = {
             "Content-Type": "multipart/form-data",
